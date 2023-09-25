@@ -12,9 +12,11 @@
     "prettier:fix": "npm run prettier -- --write"
   },
   "dependencies": {
+    "firebase": "^10.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
+    "react-query": "^3.39.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
