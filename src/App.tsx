@@ -5,7 +5,7 @@ import IdeaPage from "./screens/pages/idea";
 import LoginAuthPage from "./screens/pages/auth/login";
 
 function App() {
-  const isReady = false
+  const isReady = true
   return (
     <>
       <DefaultLayout>

@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 import type { Idea } from "../../types/ideas";
-import { v4 as uuidv4 } from 'uuid';
+import type { FirebaseUser } from "../../types/user";
+import { v4 as uuidv4 } from "uuid";
 
 interface IdeaListProps {
   addIdea: (idea: Idea) => void;
+  doLogin: () => void;
+  doLogout: () => void;
+  user: FirebaseUser;
 }
 
-const addIdeaForm: React.FC<IdeaListProps>  = ({ addIdea }) => {
-
-  const [idea, setIdea] = useState<string>('');
+const addIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout }) => {
+  const [idea, setIdea] = useState<string>("");
 
   const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault()
+    evt.preventDefault();
 
-    addIdea({ name: idea, userName: '', votes: 0, id: uuidv4() })
-    setIdea('');
-  }
+    addIdea({ name: idea, userName: "", votes: 0, id: uuidv4() });
+    setIdea("");
+  };
 
   const handleIdeaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = (event.target as HTMLInputElement).value;
@@ -42,6 +45,25 @@ const addIdeaForm: React.FC<IdeaListProps>  = ({ addIdea }) => {
             className="w-full p-2 text-white bg-gray-600 sm:flex-1"
           />
         </form>
+        <p>
+          {user ? (
+            <>
+              Hi 👋 {user.displayName}.
+              <a href="#" onClick={doLogout} className="font-bold underline">
+                Logout
+              </a>
+              .
+            </>
+          ) : (
+            <>
+              Please{" "}
+              <a href="#" onClick={doLogin} className="font-bold underline">
+                login
+              </a>{" "}
+              first
+            </>
+          )}
+        </p>
       </section>
     </>
   );

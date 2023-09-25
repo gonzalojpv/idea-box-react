@@ -4,13 +4,10 @@ const authLoginForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
-
-  console.log(watch("email")); // watch input value by passing the name of it
 
   return (
     <>

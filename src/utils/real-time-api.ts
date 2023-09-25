@@ -1,5 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/auth";
+import { initializeApp, FirebaseError } from "firebase/app";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+
 import "firebase/database";
 
 // This value is the default 403 code from firebase
@@ -21,12 +22,13 @@ export interface RealTimeUnsubscribeParams {
 }
 
 export class RealTimeApi {
-  private firebase: firebase.app?.App;
+  private firebase;
+  private auth;
 
   constructor() {
     this.handleAuthenticationErrors = this.handleAuthenticationErrors.bind(this);
 
-    this.firebase = firebase.initializeApp({
+    this.firebase = initializeApp({
       apiKey: "AIzaSyB-ZcwRQPg-Gr4zD1MiYCBiSUuUPrHjZKI",
       authDomain: "ideaboxlive-ef86d.firebaseapp.com",
       projectId: "ideaboxlive-ef86d",
@@ -34,9 +36,11 @@ export class RealTimeApi {
       messagingSenderId: "468130084061",
       appId: "1:468130084061:web:54dc546f50292f64af1734",
     });
+    this.auth = getAuth(this.firebase);
+    this.doLoginWithGoogle = this.doLoginWithGoogle.bind(this);
   }
 
-  private handleAuthenticationErrors(error: firebase.FirebaseError) {
+  private handleAuthenticationErrors(error: FirebaseError) {
     if (error.code === PERMISSION_DENIED_STATUS_CODE) {
       // handle logout any way you want. For example, if you were using
       // AWS Cognito, you'd call `Auth.logout()`
@@ -80,13 +84,25 @@ export class RealTimeApi {
     this.firebase.database().ref(path).off(event);
   }
 
-  public doLoginWithGoogle () {
-    const provider = new this.firebase.auth().GoogleAuthProvider();
-      try {
-        await this.firebase.auth().signInWithPopup(provider);
-      } catch (error) {
-        console.error(error);
-      }
+  public async doLoginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      GoogleAuthProvider.credentialFromResult(result);
+    } catch (error) {
+      GoogleAuthProvider.credentialFromError(error);
+    }
+  }
+
+  public async doLogout() {
+    try {
+      const auth = getAuth();
+      await signOut(auth);
+    } catch (error) {
+      // An error happened.
+      console.error(error);
+    }
   }
 }
 
