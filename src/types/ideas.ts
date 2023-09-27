@@ -1,10 +1,10 @@
 export interface Idea {
 name: string;
 userName: string;
-user: string;
+user?: string;
 votes: number;
 createdAt: number;
-id: string;
+id?: string;
 }
 
 export interface IdeaListProps {

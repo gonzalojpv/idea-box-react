@@ -1,3 +1,8 @@
 import { Auth } from "firebase/auth";
 
-export type FirebaseUser = Auth | null;
+type User = {
+  displayName?: string
+  uid?: string
+}
+
+export type FirebaseUser = User & Auth | null

@@ -14,18 +14,20 @@ interface IdeaListProps {
   user: FirebaseUser;
 }
 
+interface IFormInput {
+  idea: string
+}
+
 const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset
-  // @ts-ignore
-  } = useForm<Inputs>();
-  // @ts-ignore
-  const onSubmit: SubmitHandler<Inputs> = data => {
-    // @ts-ignore
-    addIdea({ name: data.idea, userName: user?.displayName, votes: 0, createdAt: Date.now(), user: user?.uid });
+  } = useForm<IFormInput>();
+
+  const onSubmit: SubmitHandler<IFormInput> = data => {
+    addIdea({ name: data.idea, userName: user?.displayName || '', votes: 0, createdAt: Date.now(), user: user?.uid });
     reset()
   };
 
@@ -39,7 +41,7 @@ const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
             disabled={!user}
             placeholder="Add your idea"
             {...register("idea", { required: "Idea is required" })}
-            className={`form-control ${errors.ides ? "is-invalid" : null}`}
+            className={`form-control ${errors.idea ? "is-invalid" : null}`}
             aria-invalid={errors.idea ? "true" : "false"}
           />
           {user && <input
@@ -56,7 +58,6 @@ const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
         <p>
           {user ? (
             <>
-             {/* @ts-ignore */}
               Hi 👋 {user.displayName}.
               <a href="#" onClick={doLogout} className="font-bold underline">
                 Logout

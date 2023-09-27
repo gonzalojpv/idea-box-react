@@ -1,13 +1,16 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
+interface Inputs {
+  email: string
+  password: string
+}
+
 const AuthLoginForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    // @ts-ignore
   } = useForm<Inputs>();
-  // @ts-ignore
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
 
   return (
@@ -24,7 +27,7 @@ const AuthLoginForm = () => {
               autoComplete="email"
               defaultValue=""
               {...register("email", { required: "Email Address is required" })}
-              className={`form-control ${errors.password ? "is-invalid" : null}`}
+              className={`form-control ${errors.email ? "is-invalid" : null}`}
               aria-invalid={errors.email ? "true" : "false"}
             />
             {errors.email?.message as string && (
