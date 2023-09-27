@@ -1,7 +1,9 @@
 import { initializeApp, FirebaseError } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, signInWithCustomToken } from "firebase/auth";
 
-import "firebase/database";
+
+import {  getDatabase, ref, child, get, onValue, off } from "firebase/database";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 // This value is the default 403 code from firebase
 const PERMISSION_DENIED_STATUS_CODE = "PERMISSION_DENIED";
@@ -38,6 +40,9 @@ export class RealTimeApi {
     });
     this.auth = getAuth(this.firebase);
     this.doLoginWithGoogle = this.doLoginWithGoogle.bind(this);
+    this.fetch = this.fetch.bind(this);
+    this.subscribe = this.subscribe.bind(this);
+    this.unsubscribe = this.unsubscribe.bind(this);
   }
 
   private handleAuthenticationErrors(error: FirebaseError) {
@@ -48,40 +53,54 @@ export class RealTimeApi {
   }
 
   public connect(token: string) {
-    return this.firebase.auth().signInWithCustomToken(token);
+    return signInWithCustomToken(token);
   }
 
   public disconnect() {
-    return this.firebase.auth().signOut();
+    const auth = getAuth();
+    return signOut(auth);
   }
 
   public fetch<T>({ path }: RealTimeFetchParams) {
+    
+
     return new Promise<T>(resolve => {
-      this.firebase
-        .database()
-        .ref(path)
-        .once(
-          "value",
-          snapshot => {
-            resolve(snapshot.val());
-          },
-          this.handleAuthenticationErrors,
-        );
+      const dbRef = ref(getDatabase());
+      get(child(dbRef, path)).then((snapshot) => {
+        if (snapshot.exists()) {
+          resolve(snapshot.val());
+          console.log(snapshot.val());
+        } else {
+          console.log("No data available");
+        }
+      }).catch((error) => {
+        console.error(error);
+      });
     });
   }
 
-  public subscribe<T>({ path, callback, event = "value" }: RealTimeSubscribeParams<T>) {
-    const ref = this.firebase.database().ref(path);
-    const cb = (snapshot: firebase.database.DataSnapshot) => {
-      callback(snapshot.val() as T);
-    };
+  public async subscribe<T>({ path, callback, event = "value" }: RealTimeSubscribeParams<T>) {
+    const db = getFirestore(this.firebase);
 
-    ref.on(event, cb, this.handleAuthenticationErrors);
-    return () => ref.off(event, cb);
+    const querySnapshot = await getDocs(collection(db, "ideas"));
+    console.log('querySnapshot', querySnapshot)
+    // const starCountRef = ref(db, path);
+
+    // const cb = (snapshot) => {
+    //   const data = snapshot.val();
+    //   console.log('data', data)
+    //   callback(data as T);
+    // };
+
+    // onValue(starCountRef, cb);
+
+    // return () => off(event, cb);
+    return () => { console.log('---a') };
   }
 
   public unsubscribe({ path, event = "value" }: RealTimeUnsubscribeParams) {
-    this.firebase.database().ref(path).off(event);
+    // const database = getDatabase();
+    // database.ref(path).off(event);
   }
 
   public async doLoginWithGoogle() {

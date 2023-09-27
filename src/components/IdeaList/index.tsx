@@ -1,7 +1,7 @@
 import arrowIcon from "/arrow.svg";
 import type { Idea, IdeaListProps } from "../../types/ideas";
 
-const ideaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
+const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
 
   return (
     <>
@@ -32,4 +32,4 @@ const ideaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
   );
 };
 
-export default ideaList;
+export default IdeaList;
