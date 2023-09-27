@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
-const authLoginForm = () => {
+const AuthLoginForm = () => {
   const {
     register,
     handleSubmit,
@@ -76,4 +76,4 @@ const authLoginForm = () => {
   );
 };
 
-export default authLoginForm;
+export default AuthLoginForm;

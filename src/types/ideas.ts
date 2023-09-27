@@ -1,8 +1,9 @@
 export interface Idea {
 name: string;
 userName: string;
+user: string;
 votes: number;
-id: string;
+createdAt: number;
 }
 
 export interface IdeaListProps {

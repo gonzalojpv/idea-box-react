@@ -1,29 +1,38 @@
-import React from 'react';
-import { useQuery, useQueryClient, UseQueryOptions } from 'react-query';
+import { useEffect } from 'react';
 import realTimeApi from './real-time-api';
+import {
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query'
+
 
 function useRealTimeQuery<Data>(
-  firebasePathKey: string,
-  useQueryOptions: UseQueryOptions<Data> = {}
+  firebasePathKey: string
 ) {
+  console.log('---1', firebasePathKey)
   const queryClient = useQueryClient();
+  console.log('---2', queryClient)
 
-  React.useEffect(() => {
+  useEffect(() => {
+    console.log('---4')
     const unsubscribe = realTimeApi.subscribe<Data>({
       path: firebasePathKey,
       callback: val => {
         queryClient.setQueryData(firebasePathKey, val);
       },
     });
+    console.log('---5')
 
-    return () => unsubscribe();
+    return () => { console.log('-->') };
   }, [queryClient, firebasePathKey]);
 
-  return useQuery<Data, Error>(
-    firebasePathKey,
-    () => new Promise<Data>(() => {}),
-    useQueryOptions
-  );
+  console.log('---3')
+
+  // return useQuery<Data, Error>(
+  //   firebasePathKey,
+  //   () => new Promise<Data>(() => {})
+  // );
+  return []
 }
 
 export default useRealTimeQuery;

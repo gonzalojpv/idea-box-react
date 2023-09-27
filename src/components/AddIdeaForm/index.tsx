@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 import type { Idea } from "../../types/ideas";
 import type { FirebaseUser } from "../../types/user";
-import { v4 as uuidv4 } from "uuid";
 
 interface IdeaListProps {
   addIdea: (idea: Idea) => void;
@@ -11,40 +11,42 @@ interface IdeaListProps {
   user: FirebaseUser;
 }
 
-const addIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout }) => {
-  const [idea, setIdea] = useState<string>("");
-
-  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
-
-    addIdea({ name: idea, userName: "", votes: 0, id: uuidv4() });
-    setIdea("");
-  };
-
-  const handleIdeaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = (event.target as HTMLInputElement).value;
-    setIdea(newValue);
+const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = data => {
+    addIdea({ name: data.idea, userName: user?.displayName, votes: 0, createdAt: Date.now(), user: user?.uid });
+    reset()
   };
 
   return (
     <>
       <section className="mb-6">
-        <form className="sm:flex" onSubmit={onSubmit}>
+        <form className="sm:flex" onSubmit={handleSubmit(onSubmit)}>
           <input
             type="text"
-            required
-            name="idea"
-            value={idea}
-            onChange={handleIdeaChange}
+            defaultValue=""
+            disabled={!user}
             placeholder="Add your idea"
-            className="w-full p-3 sm:flex-auto"
+            {...register("idea", { required: "Idea is required" })}
+            className={`form-control ${errors.ides ? "is-invalid" : null}`}
+            aria-invalid={errors.idea ? "true" : "false"}
           />
-          <input
+          {user && <input
             type="submit"
             value={"Add idea"}
             className="w-full p-2 text-white bg-gray-600 sm:flex-1"
-          />
+          />}
         </form>
+        {errors.idea?.message as string && (
+          <div className="block mt-1 text-sm text-left text-red-500" role="alert">
+            {errors.idea?.message as string}
+          </div>
+        )}
         <p>
           {user ? (
             <>
@@ -69,4 +71,4 @@ const addIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
   );
 };
 
-export default addIdeaForm;
+export default AddIdeaForm;
