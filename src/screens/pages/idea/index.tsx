@@ -1,6 +1,5 @@
 import AddIdeaForm from "../../../components/AddIdeaForm";
 import IdeaList from "../../../components/IdeaList";
-import seed from "../../../utils/seed.json";
 import useFirebase from "../../../hooks/useFirebase";
 
 import { useState, useEffect } from "react";
@@ -10,12 +9,10 @@ import type { Idea } from "../../../types/ideas";
 import type { FirebaseUser } from "../../../types/user";
 
 const IdeaPage = () => {
-  const { ideas } = seed;
-
-  const [items, setItems] = useState(ideas);
+  const [items, setItems] = useState([]);
   const [user, setUser] = useState<FirebaseUser>(null);
   // @ts-ignore
-  const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection] = useFirebase();
+  const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] = useFirebase();
 
   useEffect(() => {
     async function fetchData() {
@@ -25,7 +22,7 @@ const IdeaPage = () => {
       // ...
     }
     fetchData();
-  });
+  }, []);
 
   useEffect(() => {
     // @ts-ignore
@@ -41,34 +38,14 @@ const IdeaPage = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleUpIdea = (item: Idea) => {
+  const handleUpIdea = async (item: Idea) => {
     // @ts-ignore
-    const ideas = items.map((idea: Idea) => {
-      // @ts-ignore
-      if (idea.id === item.id) {
-        idea.votes = idea.votes + 1;
-      }
-
-      return idea;
-    });
-    // @ts-ignore
-    setItems(ideas);
+    await voteIdea({ type: true, id: item.id, userId: user?.uid })
   };
 
-  const handleDownIdea = (item: Idea) => {
+  const handleDownIdea = async (item: Idea) => {
     // @ts-ignore
-    const ideas = items.map((idea: Idea) => {
-      // @ts-ignore
-      if (idea.id === item.id) {
-        if (idea.votes > 0) {
-          idea.votes = idea.votes - 1;
-        }
-      }
-
-      return idea;
-    });
-    // @ts-ignore
-    setItems(ideas);
+    await voteIdea({ type: false, id: item.id, userId: user?.uid })
   };
 
   return (
