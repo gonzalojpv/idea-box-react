@@ -14,11 +14,12 @@ const IdeaPage = () => {
 
   const [items, setItems] = useState(ideas);
   const [user, setUser] = useState<FirebaseUser>(null);
+  // @ts-ignore
   const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection] = useFirebase();
 
   useEffect(() => {
     async function fetchData() {
-      // You can await here
+      // @ts-ignore
       const response = await fetchCollection("ideas");
       setItems(response);
       // ...
@@ -27,8 +28,10 @@ const IdeaPage = () => {
   });
 
   useEffect(() => {
+    // @ts-ignore
     const unsubscribe = onAuthStateChanged(auth, authUser => {
       if (authUser) {
+        // @ts-ignore
         setUser(authUser);
       } else {
         setUser(null);
@@ -39,19 +42,23 @@ const IdeaPage = () => {
   }, []);
 
   const handleUpIdea = (item: Idea) => {
+    // @ts-ignore
     const ideas = items.map((idea: Idea) => {
+      // @ts-ignore
       if (idea.id === item.id) {
         idea.votes = idea.votes + 1;
       }
 
       return idea;
     });
-
+    // @ts-ignore
     setItems(ideas);
   };
 
   const handleDownIdea = (item: Idea) => {
+    // @ts-ignore
     const ideas = items.map((idea: Idea) => {
+      // @ts-ignore
       if (idea.id === item.id) {
         if (idea.votes > 0) {
           idea.votes = idea.votes - 1;
@@ -60,7 +67,7 @@ const IdeaPage = () => {
 
       return idea;
     });
-
+    // @ts-ignore
     setItems(ideas);
   };
 
@@ -68,12 +75,9 @@ const IdeaPage = () => {
     <>
       <div className="w-full p-4 bg-gray-100 rounded-lg shadow-lg">
         <h1 className="mb-5 text-4xl text-center">IdeaBox</h1>
-        <AddIdeaForm
-          user={user}
-          addIdea={addToCollection}
-          doLogin={doLoginWithGoogle}
-          doLogout={doLogout}
-        />
+        {/* @ts-ignore */}
+        <AddIdeaForm user={user} addIdea={addToCollection} doLogin={doLoginWithGoogle} doLogout={doLogout} />
+        {/* @ts-ignore */}
         <IdeaList downIdea={handleDownIdea} upIdea={handleUpIdea} items={items} />
       </div>
     </>

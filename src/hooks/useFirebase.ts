@@ -7,7 +7,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { collection, getDocs, getFirestore, doc, addDoc, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, getFirestore, addDoc, orderBy, query } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
 
 import "firebase/auth";

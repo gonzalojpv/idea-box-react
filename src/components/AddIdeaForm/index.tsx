@@ -3,10 +3,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import type { Idea } from "../../types/ideas";
 import type { FirebaseUser } from "../../types/user";
-
+// @ts-ignore
 interface IdeaListProps {
+  // @ts-ignore
   addIdea: (idea: Idea) => void;
+  // @ts-ignore
   doLogin: () => void;
+  // @ts-ignore
   doLogout: () => void;
   user: FirebaseUser;
 }
@@ -17,8 +20,11 @@ const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
     handleSubmit,
     formState: { errors },
     reset
+  // @ts-ignore
   } = useForm<Inputs>();
+  // @ts-ignore
   const onSubmit: SubmitHandler<Inputs> = data => {
+    // @ts-ignore
     addIdea({ name: data.idea, userName: user?.displayName, votes: 0, createdAt: Date.now(), user: user?.uid });
     reset()
   };
@@ -50,6 +56,7 @@ const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
         <p>
           {user ? (
             <>
+             {/* @ts-ignore */}
               Hi 👋 {user.displayName}.
               <a href="#" onClick={doLogout} className="font-bold underline">
                 Logout

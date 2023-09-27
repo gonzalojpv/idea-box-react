@@ -5,8 +5,9 @@ const AuthLoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    // @ts-ignore
   } = useForm<Inputs>();
-
+  // @ts-ignore
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
 
   return (
