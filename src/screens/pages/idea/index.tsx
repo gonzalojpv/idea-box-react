@@ -15,13 +15,7 @@ const IdeaPage = () => {
   const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] = useFirebase();
 
   useEffect(() => {
-    async function fetchData() {
-      // @ts-ignore
-      const response = await fetchCollection("ideas");
-      setItems(response);
-      // ...
-    }
-    fetchData();
+    fetchIdeas();
   }, []);
 
   useEffect(() => {
@@ -38,6 +32,13 @@ const IdeaPage = () => {
     return () => unsubscribe();
   }, []);
 
+  const fetchIdeas = async () => {
+    // @ts-ignore
+      const response = await fetchCollection("ideas");
+      setItems(response);
+      fetchIdeas();
+  }
+
   const handleUpIdea = async (item: Idea) => {
     // @ts-ignore
     await voteIdea({ type: true, id: item.id, userId: user?.uid })
@@ -46,6 +47,7 @@ const IdeaPage = () => {
   const handleDownIdea = async (item: Idea) => {
     // @ts-ignore
     await voteIdea({ type: false, id: item.id, userId: user?.uid })
+    fetchIdeas();
   };
 
   return (
