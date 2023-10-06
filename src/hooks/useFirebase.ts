@@ -19,12 +19,9 @@ import {
   updateDoc,
   increment,
   setDoc,
-  arrayUnion
+  arrayUnion,
 } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
-
-import "firebase/auth";
-import "firebase/firestore";
 
 export default function useFirebase() {
   const app: FirebaseApp = initializeApp({
@@ -61,11 +58,12 @@ export default function useFirebase() {
     }
   };
 
-  const fetchCollection = async (path: string) => {
+  const fetchCollection = async (path: string): Promise<Idea[]> => {
     const collectionRef = collection(db, path);
     const orderedAndLimitedQuery = query(collectionRef, orderBy("votes", "desc"));
     const querySnapshot = await getDocs(orderedAndLimitedQuery);
     const newIdeas: Idea[] = [];
+
     querySnapshot.forEach(doc => {
       const { name, user, userName, votes, createdAt } = doc.data();
       const id = doc.id;
@@ -79,7 +77,7 @@ export default function useFirebase() {
       });
     });
 
-    return newIdeas;
+    return Promise.resolve(newIdeas);
   };
 
   const addToCollection = async (newItem: Idea) => {
@@ -90,33 +88,30 @@ export default function useFirebase() {
     }
   };
   // @ts-ignore
-  const voteIdea = async ({ id, type, userId }) => {
-    console.log('userId', userId)
-    console.log('id', id)
-    try {
-      const docRef = doc(db, "ideas", userId);
-      const docSnap = await getDoc(docRef);
+  const voteIdea = async ({ id, type, userId }): void => {
+    const docRef = doc(db, "ideas", userId);
+    const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const votes = docSnap.data().ideas;
-        // @ts-ignore
-        if (votes.find(vote => vote === id)) throw new Error("User already voted!");
-      }
-
-      const ideaRef = doc(db, "ideas", id);
-
-      await updateDoc(ideaRef, {
-        votes: increment(type ? 1 : -1)
-      });
-
-      // Add a new document in collection "cities"
-      await setDoc(doc(db, "ideas", userId), {
-        ideas: arrayUnion(id)
-      }, { merge: true });
-
-    } catch (error) {
-      console.error(error);
+    if (docSnap.exists()) {
+      const votes = docSnap.data().ideas;
+      // @ts-ignore
+      if (votes.find(vote => vote === id)) throw new Error("User already voted!");
     }
+
+    const ideaRef = doc(db, "ideas", id);
+
+    await updateDoc(ideaRef, {
+      votes: increment(type ? 1 : -1),
+    });
+
+    // Add a new document in collection "cities"
+    await setDoc(
+      doc(db, "ideas", userId),
+      {
+        ideas: arrayUnion(id),
+      },
+      { merge: true },
+    );
   };
 
   return [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];

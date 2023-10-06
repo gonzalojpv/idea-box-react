@@ -2,8 +2,9 @@ import AddIdeaForm from "../../../components/AddIdeaForm";
 import IdeaList from "../../../components/IdeaList";
 import useFirebase from "../../../hooks/useFirebase";
 
-import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { useState, useEffect, useCallback } from "react";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
+import { ToastContainer, toast } from 'react-toastify';
 
 import type { Idea } from "../../../types/ideas";
 import type { FirebaseUser } from "../../../types/user";
@@ -14,15 +15,26 @@ const IdeaPage = () => {
   // @ts-ignore
   const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] = useFirebase();
 
-  useEffect(() => {
-    fetchIdeas();
-  }, []);
+  const fetchIdeas = useCallback(async () => {
+    try {
+      // @ts-ignore
+      const response = await fetchCollection("ideas");
+      setItems(response);
+      fetchIdeas();
+    } catch (error) {
+      console.log('Error', error)
+    }
+  }, [])
 
   useEffect(() => {
+    fetchIdeas();
+  }, [fetchIdeas]);
+
+  useEffect(() => {
+    const auth2 = getAuth();
     // @ts-ignore
-    const unsubscribe = onAuthStateChanged(auth, authUser => {
+    const unsubscribe = onAuthStateChanged(auth2, (authUser: FirebaseUser) => {
       if (authUser) {
-        // @ts-ignore
         setUser(authUser);
       } else {
         setUser(null);
@@ -32,22 +44,15 @@ const IdeaPage = () => {
     return () => unsubscribe();
   }, []);
 
-  const fetchIdeas = async () => {
-    // @ts-ignore
-      const response = await fetchCollection("ideas");
-      setItems(response);
-      fetchIdeas();
-  }
-
-  const handleUpIdea = async (item: Idea) => {
-    // @ts-ignore
-    await voteIdea({ type: true, id: item.id, userId: user?.uid })
-  };
-
-  const handleDownIdea = async (item: Idea) => {
-    // @ts-ignore
-    await voteIdea({ type: false, id: item.id, userId: user?.uid })
-    fetchIdeas();
+  const handleIdea = async (item: Idea, type: boolean) => {
+    try {
+      // @ts-ignore
+      await voteIdea({ type: type, id: item.id, userId: user?.uid })
+      fetchIdeas(); 
+    } catch (error) {
+      // @ts-ignore
+      toast.error(error.message)
+    }
   };
 
   return (
@@ -57,8 +62,9 @@ const IdeaPage = () => {
         {/* @ts-ignore */}
         <AddIdeaForm user={user} addIdea={addToCollection} doLogin={doLoginWithGoogle} doLogout={doLogout} />
         {/* @ts-ignore */}
-        <IdeaList downIdea={handleDownIdea} upIdea={handleUpIdea} items={items} />
+        <IdeaList downIdea={handleIdea} upIdea={handleIdea} items={items} />
       </div>
+      <ToastContainer />
     </>
   );
 };

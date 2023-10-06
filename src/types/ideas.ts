@@ -10,6 +10,6 @@ id?: string;
 export interface IdeaListProps {
   // @ts-ignore
  items: Idea[];
- upIdea: (idea: Idea) => void
- downIdea: (idea: Idea) => void
+ upIdea: (idea: Idea, type: boolean) => void
+ downIdea: (idea: Idea, type: boolean) => void
 }
