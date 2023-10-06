@@ -4,7 +4,7 @@ import useFirebase from "../../../hooks/useFirebase";
 
 import { useState, useEffect, useCallback } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 import type { Idea } from "../../../types/ideas";
 import type { FirebaseUser } from "../../../types/user";
@@ -13,7 +13,8 @@ const IdeaPage = () => {
   const [items, setItems] = useState([]);
   const [user, setUser] = useState<FirebaseUser>(null);
   // @ts-ignore
-  const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] = useFirebase();
+  const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] =
+    useFirebase();
 
   const fetchIdeas = useCallback(async () => {
     try {
@@ -22,9 +23,9 @@ const IdeaPage = () => {
       setItems(response);
       fetchIdeas();
     } catch (error) {
-      console.log('Error', error)
+      console.log("Error", error);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     fetchIdeas();
@@ -47,11 +48,11 @@ const IdeaPage = () => {
   const handleIdea = async (item: Idea, type: boolean) => {
     try {
       // @ts-ignore
-      await voteIdea({ type: type, id: item.id, userId: user?.uid })
-      fetchIdeas(); 
+      await voteIdea({ type: type, id: item.id, userId: user?.uid });
+      fetchIdeas();
     } catch (error) {
       // @ts-ignore
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
@@ -60,7 +61,12 @@ const IdeaPage = () => {
       <div className="w-full p-4 bg-gray-100 rounded-lg shadow-lg">
         <h1 className="mb-5 text-4xl text-center">IdeaBox</h1>
         {/* @ts-ignore */}
-        <AddIdeaForm user={user} addIdea={addToCollection} doLogin={doLoginWithGoogle} doLogout={doLogout} />
+        <AddIdeaForm
+          user={user}
+          addIdea={addToCollection}
+          doLogin={doLoginWithGoogle}
+          doLogout={doLogout}
+        />
         {/* @ts-ignore */}
         <IdeaList downIdea={handleIdea} upIdea={handleIdea} items={items} />
       </div>

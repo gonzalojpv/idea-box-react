@@ -15,7 +15,7 @@ interface IdeaListProps {
 }
 
 interface IFormInput {
-  idea: string
+  idea: string;
 }
 
 const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout }) => {
@@ -23,12 +23,18 @@ const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = data => {
-    addIdea({ name: data.idea, userName: user?.displayName || '', votes: 0, createdAt: Date.now(), user: user?.uid });
-    reset()
+    addIdea({
+      name: data.idea,
+      userName: user?.displayName || "",
+      votes: 0,
+      createdAt: Date.now(),
+      user: user?.uid,
+    });
+    reset();
   };
 
   return (
@@ -44,13 +50,15 @@ const AddIdeaForm: React.FC<IdeaListProps> = ({ addIdea, user, doLogin, doLogout
             className={`form-control ${errors.idea ? "is-invalid" : null}`}
             aria-invalid={errors.idea ? "true" : "false"}
           />
-          {user && <input
-            type="submit"
-            value={"Add idea"}
-            className="w-full p-2 text-white bg-gray-600 sm:flex-1"
-          />}
+          {user && (
+            <input
+              type="submit"
+              value={"Add idea"}
+              className="w-full p-2 text-white bg-gray-600 sm:flex-1"
+            />
+          )}
         </form>
-        {errors.idea?.message as string && (
+        {(errors.idea?.message as string) && (
           <div className="block mt-1 text-sm text-left text-red-500" role="alert">
             {errors.idea?.message as string}
           </div>

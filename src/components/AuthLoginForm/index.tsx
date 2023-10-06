@@ -1,8 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface Inputs {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 const AuthLoginForm = () => {
@@ -30,7 +30,7 @@ const AuthLoginForm = () => {
               className={`form-control ${errors.email ? "is-invalid" : null}`}
               aria-invalid={errors.email ? "true" : "false"}
             />
-            {errors.email?.message as string && (
+            {(errors.email?.message as string) && (
               <div className="block mt-1 text-sm text-left text-red-500" role="alert">
                 {errors.email?.message as string}
               </div>
@@ -59,7 +59,7 @@ const AuthLoginForm = () => {
               className={`form-control ${errors.password ? "is-invalid" : null}`}
               aria-invalid={errors.email ? "true" : "false"}
             />
-            {errors.password?.message as string && (
+            {(errors.password?.message as string) && (
               <div className="block mt-1 text-sm text-left text-red-500" role="alert">
                 {errors.password?.message as string}
               </div>
