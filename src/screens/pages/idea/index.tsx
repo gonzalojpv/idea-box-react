@@ -3,7 +3,7 @@ import IdeaList from "../../../components/IdeaList";
 import useFirebase from "../../../hooks/useFirebase";
 
 import { useState, useEffect, useCallback } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 
 import type { Idea } from "../../../types/ideas";
@@ -31,10 +31,10 @@ const IdeaPage = () => {
   }, [fetchIdeas]);
 
   useEffect(() => {
+    const auth2 = getAuth();
     // @ts-ignore
-    const unsubscribe = onAuthStateChanged(auth, authUser => {
+    const unsubscribe = onAuthStateChanged(auth2, (authUser: FirebaseUser) => {
       if (authUser) {
-        // @ts-ignore
         setUser(authUser);
       } else {
         setUser(null);

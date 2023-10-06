@@ -23,9 +23,6 @@ import {
 } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
 
-import "firebase/auth";
-import "firebase/firestore";
-
 export default function useFirebase() {
   const app: FirebaseApp = initializeApp({
     apiKey: "AIzaSyB-ZcwRQPg-Gr4zD1MiYCBiSUuUPrHjZKI",
@@ -61,11 +58,12 @@ export default function useFirebase() {
     }
   };
 
-  const fetchCollection = async (path: string) => {
+  const fetchCollection = async (path: string): Promise<Idea[]> => {
     const collectionRef = collection(db, path);
     const orderedAndLimitedQuery = query(collectionRef, orderBy("votes", "desc"));
     const querySnapshot = await getDocs(orderedAndLimitedQuery);
     const newIdeas: Idea[] = [];
+
     querySnapshot.forEach(doc => {
       const { name, user, userName, votes, createdAt } = doc.data();
       const id = doc.id;
@@ -79,7 +77,7 @@ export default function useFirebase() {
       });
     });
 
-    return newIdeas;
+    return Promise.resolve(newIdeas);
   };
 
   const addToCollection = async (newItem: Idea) => {
@@ -90,7 +88,7 @@ export default function useFirebase() {
     }
   };
   // @ts-ignore
-  const voteIdea = async ({ id, type, userId }) => {
+  const voteIdea = async ({ id, type, userId }): void => {
     const docRef = doc(db, "ideas", userId);
     const docSnap = await getDoc(docRef);
 
