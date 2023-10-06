@@ -16,12 +16,12 @@ const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
         <section className="pt-3 mt-6 border-t-2 border-black sm:pt-0 sm:pl-3 sm:border-t-0 sm:border-l-2 sm:flex sm:items-center">
           <h3 className="text-3xl font-bold text-center">{item.votes}</h3>
           <nav className="flex justify-center sm:block">
-            <img src={arrowIcon} alt="Vote up" className="w-10 cursor-pointer" onClick={() => upIdea(item)} />
+            <img src={arrowIcon} alt="Vote up" className="w-10 cursor-pointer" onClick={() => upIdea(item, true)} />
             <img
               src={arrowIcon}
               alt="Vote down"
               className="w-10 cursor-pointer transform rotate-180"
-              onClick={() => downIdea(item)}
+              onClick={() => downIdea(item, false)}
             />
           </nav>
         </section>

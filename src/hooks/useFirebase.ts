@@ -19,7 +19,7 @@ import {
   updateDoc,
   increment,
   setDoc,
-  arrayUnion
+  arrayUnion,
 } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
 
@@ -91,32 +91,29 @@ export default function useFirebase() {
   };
   // @ts-ignore
   const voteIdea = async ({ id, type, userId }) => {
-    console.log('userId', userId)
-    console.log('id', id)
-    try {
-      const docRef = doc(db, "ideas", userId);
-      const docSnap = await getDoc(docRef);
+    const docRef = doc(db, "ideas", userId);
+    const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        const votes = docSnap.data().ideas;
-        // @ts-ignore
-        if (votes.find(vote => vote === id)) throw new Error("User already voted!");
-      }
-
-      const ideaRef = doc(db, "ideas", id);
-
-      await updateDoc(ideaRef, {
-        votes: increment(type ? 1 : -1)
-      });
-
-      // Add a new document in collection "cities"
-      await setDoc(doc(db, "ideas", userId), {
-        ideas: arrayUnion(id)
-      }, { merge: true });
-
-    } catch (error) {
-      console.error(error);
+    if (docSnap.exists()) {
+      const votes = docSnap.data().ideas;
+      // @ts-ignore
+      if (votes.find(vote => vote === id)) throw new Error("User already voted!");
     }
+
+    const ideaRef = doc(db, "ideas", id);
+
+    await updateDoc(ideaRef, {
+      votes: increment(type ? 1 : -1),
+    });
+
+    // Add a new document in collection "cities"
+    await setDoc(
+      doc(db, "ideas", userId),
+      {
+        ideas: arrayUnion(id),
+      },
+      { merge: true },
+    );
   };
 
   return [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];
