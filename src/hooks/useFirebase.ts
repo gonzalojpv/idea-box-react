@@ -20,21 +20,29 @@ import {
   increment,
   setDoc,
   arrayUnion,
+  Firestore
 } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
 
 export default function useFirebase() {
-  const app: FirebaseApp = initializeApp({
-    apiKey: "AIzaSyB-ZcwRQPg-Gr4zD1MiYCBiSUuUPrHjZKI",
-    authDomain: "ideaboxlive-ef86d.firebaseapp.com",
-    projectId: "ideaboxlive-ef86d",
-    storageBucket: "ideaboxlive-ef86d.appspot.com",
-    messagingSenderId: "468130084061",
-    appId: "1:468130084061:web:54dc546f50292f64af1734",
-  });
+  // @ts-ignore
+  let auth: Auth
+  let  db: Firestore
+  let app: FirebaseApp
 
-  const auth: Auth = getAuth(app);
-  const db = getFirestore(app);
+  const init = (): void => {
+    app = initializeApp({
+      apiKey: "AIzaSyB-ZcwRQPg-Gr4zD1MiYCBiSUuUPrHjZKI",
+      authDomain: "ideaboxlive-ef86d.firebaseapp.com",
+      projectId: "ideaboxlive-ef86d",
+      storageBucket: "ideaboxlive-ef86d.appspot.com",
+      messagingSenderId: "468130084061",
+      appId: "1:468130084061:web:54dc546f50292f64af1734",
+    });
+
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
 
   const doLoginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -114,5 +122,5 @@ export default function useFirebase() {
     );
   };
 
-  return [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];
+  return [ init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];
 }
