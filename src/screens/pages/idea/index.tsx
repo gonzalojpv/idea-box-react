@@ -4,7 +4,7 @@ import useFirebase from "../../../hooks/useFirebase";
 
 import { useState, useEffect, useCallback } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 
 import type { Idea } from "../../../types/ideas";
 import type { FirebaseUser } from "../../../types/user";
@@ -13,18 +13,22 @@ const IdeaPage = () => {
   const [items, setItems] = useState([]);
   const [user, setUser] = useState<FirebaseUser>(null);
   // @ts-ignore
-  const [auth, db, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] = useFirebase();
+  const [ init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] =
+    useFirebase();
 
   const fetchIdeas = useCallback(async () => {
     try {
       // @ts-ignore
+      init()
+      // @ts-ignore
       const response = await fetchCollection("ideas");
+      // @ts-ignore
       setItems(response);
       fetchIdeas();
     } catch (error) {
-      console.log('Error', error)
+      console.log("Error", error);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     fetchIdeas();
@@ -47,11 +51,11 @@ const IdeaPage = () => {
   const handleIdea = async (item: Idea, type: boolean) => {
     try {
       // @ts-ignore
-      await voteIdea({ type: type, id: item.id, userId: user?.uid })
-      fetchIdeas(); 
+      await voteIdea({ type: type, id: item.id, userId: user?.uid });
+      fetchIdeas();
     } catch (error) {
       // @ts-ignore
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
