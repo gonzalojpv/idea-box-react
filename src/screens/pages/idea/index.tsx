@@ -2,7 +2,7 @@ import AddIdeaForm from "../../../components/AddIdeaForm";
 import IdeaList from "../../../components/IdeaList";
 import useFirebase from "../../../hooks/useFirebase";
 
-import { AccountContext } from "../../../contexts/account-context";
+import { AccountContext, AccountContextProps } from "../../../contexts/account-context";
 import { useState, useEffect, useCallback, useContext } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
@@ -16,8 +16,7 @@ const IdeaPage = () => {
   const { init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea } =
     useFirebase();
 
-  // @ts-ignore
-  const { setAccount } = useContext(AccountContext);
+  const { setAccount } = useContext(AccountContext) as AccountContextProps;
 
   const fetchIdeas = useCallback(async () => {
     try {

@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useState } from "react";
 import type { FirebaseUser } from "../types/user";
 
-interface AccountContextProps {
+export interface AccountContextProps {
   currentUser: FirebaseUser;
   setAccount: (user: FirebaseUser) => void;
 }
