@@ -20,15 +20,15 @@ import {
   increment,
   setDoc,
   arrayUnion,
-  Firestore
+  Firestore,
 } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
 
 export default function useFirebase() {
   // @ts-ignore
-  let auth: Auth
-  let  db: Firestore
-  let app: FirebaseApp
+  let auth: Auth;
+  let db: Firestore;
+  let app: FirebaseApp;
 
   const init = (): void => {
     app = initializeApp({
@@ -42,7 +42,7 @@ export default function useFirebase() {
 
     auth = getAuth(app);
     db = getFirestore(app);
-  }
+  };
 
   const doLoginWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
@@ -122,5 +122,5 @@ export default function useFirebase() {
     );
   };
 
-  return [ init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];
+  return [init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];
 }

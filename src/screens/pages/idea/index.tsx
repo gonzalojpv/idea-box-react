@@ -2,7 +2,8 @@ import AddIdeaForm from "../../../components/AddIdeaForm";
 import IdeaList from "../../../components/IdeaList";
 import useFirebase from "../../../hooks/useFirebase";
 
-import { useState, useEffect, useCallback } from "react";
+import { AccountContext } from "../../../contexts/account-context";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -13,13 +14,15 @@ const IdeaPage = () => {
   const [items, setItems] = useState([]);
   const [user, setUser] = useState<FirebaseUser>(null);
   // @ts-ignore
-  const [ init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] =
+  const [init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] =
     useFirebase();
+
+  const { setAccount } = useContext(AccountContext);
 
   const fetchIdeas = useCallback(async () => {
     try {
       // @ts-ignore
-      init()
+      init();
       // @ts-ignore
       const response = await fetchCollection("ideas");
       // @ts-ignore
@@ -39,6 +42,7 @@ const IdeaPage = () => {
     // @ts-ignore
     const unsubscribe = onAuthStateChanged(auth2, (authUser: FirebaseUser) => {
       if (authUser) {
+        setAccount(authUser);
         setUser(authUser);
       } else {
         setUser(null);
@@ -64,7 +68,12 @@ const IdeaPage = () => {
       <div className="w-full p-4 bg-gray-100 rounded-lg shadow-lg">
         <h1 className="mb-5 text-4xl text-center">IdeaBox</h1>
         {/* @ts-ignore */}
-        <AddIdeaForm user={user} addIdea={addToCollection} doLogin={doLoginWithGoogle} doLogout={doLogout} />
+        <AddIdeaForm
+          user={user}
+          addIdea={addToCollection}
+          doLogin={doLoginWithGoogle}
+          doLogout={doLogout}
+        />
         {/* @ts-ignore */}
         <IdeaList downIdea={handleIdea} upIdea={handleIdea} items={items} />
       </div>
