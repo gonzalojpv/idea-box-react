@@ -1,5 +1,6 @@
 import arrowIcon from "/arrow.svg";
 import RemoveIdea from "../RemoveIdea";
+import useFirebase from "../../hooks/useFirebase";
 
 import { AccountContext } from "../../contexts/account-context";
 import type { Idea, IdeaListProps } from "../../types/ideas";
@@ -10,6 +11,7 @@ const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
   const [selectedIdea, setSelectedIdea] = useState<Idea>();
   // @ts-ignore
   const { currentUser } = useContext(AccountContext);
+  const { removeIdeaAction } = useFirebase();
 
   const onRemoveIdea = useCallback((idea: Idea) => {
     setSelectedIdea(idea);
@@ -20,8 +22,8 @@ const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
     setIsModalActive(false);
   };
 
-  const removeIdeaHandle = () => {
-    console.log("RemoveIdea", selectedIdea);
+  const removeIdeaHandle = async () => {
+    await removeIdeaAction(selectedIdea?.id || "");
     onCloseModal();
   };
 

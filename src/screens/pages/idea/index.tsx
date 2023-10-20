@@ -13,17 +13,15 @@ import type { FirebaseUser } from "../../../types/user";
 const IdeaPage = () => {
   const [items, setItems] = useState([]);
   const [user, setUser] = useState<FirebaseUser>(null);
-  // @ts-ignore
-  const [init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea] =
+  const { init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea } =
     useFirebase();
 
+  // @ts-ignore
   const { setAccount } = useContext(AccountContext);
 
   const fetchIdeas = useCallback(async () => {
     try {
-      // @ts-ignore
       init();
-      // @ts-ignore
       const response = await fetchCollection("ideas");
       // @ts-ignore
       setItems(response);

@@ -21,6 +21,7 @@ import {
   setDoc,
   arrayUnion,
   Firestore,
+  deleteDoc,
 } from "firebase/firestore";
 import type { Idea } from "../types/ideas";
 
@@ -95,15 +96,15 @@ export default function useFirebase() {
       console.error(error);
     }
   };
-  // @ts-ignore
-  const voteIdea = async ({ id, type, userId }): void => {
+
+  const voteIdea = async ({ id, type, userId }: { id: string; type: boolean; userId: string }) => {
     const docRef = doc(db, "ideas", userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const votes = docSnap.data().ideas;
-      // @ts-ignore
-      if (votes.find(vote => vote === id)) throw new Error("User already voted!");
+
+      if (votes.find((vote: string) => vote === id)) throw new Error("User already voted!");
     }
 
     const ideaRef = doc(db, "ideas", id);
@@ -112,7 +113,6 @@ export default function useFirebase() {
       votes: increment(type ? 1 : -1),
     });
 
-    // Add a new document in collection "cities"
     await setDoc(
       doc(db, "ideas", userId),
       {
@@ -122,5 +122,21 @@ export default function useFirebase() {
     );
   };
 
-  return [init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea];
+  const removeIdeaAction = async (docId: string) => {
+    if (docId) {
+      init();
+
+      await deleteDoc(doc(db, "ideas", docId));
+    }
+  };
+
+  return {
+    init,
+    doLoginWithGoogle,
+    doLogout,
+    fetchCollection,
+    addToCollection,
+    voteIdea,
+    removeIdeaAction,
+  };
 }
