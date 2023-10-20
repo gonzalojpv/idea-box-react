@@ -2,6 +2,8 @@ import arrowIcon from "/arrow.svg";
 import type { Idea, IdeaListProps } from "../../types/ideas";
 
 const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
+  console.log("Idea", items);
+
   return (
     <>
       {items.map((item: Idea) => (
@@ -9,6 +11,7 @@ const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
           key={item.name}
           className="p-3 mb-4 bg-gray-300 rounded-lg sm:flex sm:items-center idea"
         >
+          <img className="mr-3 cursor-pointer" src="/remove.svg" alt="Remove Idea" />
           <section className="text-center sm:flex-1 sm:text-left">
             <h2 className="text-xl sm:text-2xl sm:leading-6">{item.name}</h2>
             <small>{item.userName}</small>
