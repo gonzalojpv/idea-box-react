@@ -11,7 +11,7 @@ import type { Idea } from "../../../types/ideas";
 import type { FirebaseUser } from "../../../types/user";
 
 const IdeaPage = () => {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Idea[]>([]);
   const [user, setUser] = useState<FirebaseUser>(null);
   const { init, doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea } =
     useFirebase();
@@ -22,9 +22,7 @@ const IdeaPage = () => {
     try {
       init();
       const response = await fetchCollection("ideas");
-      // @ts-ignore
       setItems(response);
-      fetchIdeas();
     } catch (error) {
       console.log("Error", error);
     }
@@ -32,15 +30,14 @@ const IdeaPage = () => {
 
   useEffect(() => {
     fetchIdeas();
-  }, [fetchIdeas]);
+  }, []);
 
   useEffect(() => {
     const auth2 = getAuth();
-    // @ts-ignore
-    const unsubscribe = onAuthStateChanged(auth2, (authUser: FirebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth2, authUser => {
       if (authUser) {
-        setAccount(authUser);
-        setUser(authUser);
+        setAccount(authUser as FirebaseUser);
+        setUser(authUser as FirebaseUser);
       } else {
         setUser(null);
       }
@@ -51,27 +48,36 @@ const IdeaPage = () => {
 
   const handleIdea = async (item: Idea, type: boolean) => {
     try {
-      // @ts-ignore
-      await voteIdea({ type: type, id: item.id, userId: user?.uid });
+      if (item?.id && user?.uid) {
+        await voteIdea({ type: type, id: item.id, userId: user.uid });
+      }
+
       fetchIdeas();
     } catch (error) {
       // @ts-ignore
-      toast.error(error.message);
+      if (error?.message) {
+        // @ts-ignore
+        toast.error(error.message as string);
+      }
     }
+  };
+
+  const addNewIdea = async (idea: Idea) => {
+    console.log("AddNewIdea", idea);
+    await addToCollection(idea);
+    fetchIdeas();
   };
 
   return (
     <>
       <div className="w-full p-4 bg-gray-100 rounded-lg shadow-lg">
         <h1 className="mb-5 text-4xl text-center">IdeaBox</h1>
-        {/* @ts-ignore */}
         <AddIdeaForm
           user={user}
-          addIdea={addToCollection}
+          addIdea={addNewIdea}
           doLogin={doLoginWithGoogle}
           doLogout={doLogout}
         />
-        {/* @ts-ignore */}
         <IdeaList downIdea={handleIdea} upIdea={handleIdea} items={items} />
       </div>
       <ToastContainer />
