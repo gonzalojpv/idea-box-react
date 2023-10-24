@@ -32,17 +32,19 @@ export default function useFirebase() {
   let app: FirebaseApp;
 
   const init = (): void => {
-    app = initializeApp({
-      apiKey: "AIzaSyB-ZcwRQPg-Gr4zD1MiYCBiSUuUPrHjZKI",
-      authDomain: "ideaboxlive-ef86d.firebaseapp.com",
-      projectId: "ideaboxlive-ef86d",
-      storageBucket: "ideaboxlive-ef86d.appspot.com",
-      messagingSenderId: "468130084061",
-      appId: "1:468130084061:web:54dc546f50292f64af1734",
-    });
+    if (!app) {
+      app = initializeApp({
+        apiKey: "AIzaSyB-ZcwRQPg-Gr4zD1MiYCBiSUuUPrHjZKI",
+        authDomain: "ideaboxlive-ef86d.firebaseapp.com",
+        projectId: "ideaboxlive-ef86d",
+        storageBucket: "ideaboxlive-ef86d.appspot.com",
+        messagingSenderId: "468130084061",
+        appId: "1:468130084061:web:54dc546f50292f64af1734",
+      });
 
-    auth = getAuth(app);
-    db = getFirestore(app);
+      auth = getAuth(app);
+      db = getFirestore(app);
+    }
   };
 
   const doLoginWithGoogle = async () => {
@@ -90,6 +92,7 @@ export default function useFirebase() {
   };
 
   const addToCollection = async (newItem: Idea) => {
+    init();
     try {
       await addDoc(collection(db, "ideas"), newItem);
     } catch (error) {
