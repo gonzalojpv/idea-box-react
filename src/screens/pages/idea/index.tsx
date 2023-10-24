@@ -13,9 +13,10 @@ import type { FirebaseUser } from "../../../types/user";
 const IdeaPage = () => {
   const [items, setItems] = useState<Idea[]>([]);
   const [user, setUser] = useState<FirebaseUser>(null);
-  const { doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea } = useFirebase();
+  const { doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea, getUserVotes } =
+    useFirebase();
 
-  const { setAccount } = useContext(AccountContext) as AccountContextProps;
+  const { setAccount, setUserVotes } = useContext(AccountContext) as AccountContextProps;
 
   const fetchIdeas = useCallback(async () => {
     try {
@@ -32,12 +33,15 @@ const IdeaPage = () => {
 
   useEffect(() => {
     const auth2 = getAuth();
-    const unsubscribe = onAuthStateChanged(auth2, authUser => {
+    const unsubscribe = onAuthStateChanged(auth2, async authUser => {
       if (authUser) {
         setAccount(authUser as FirebaseUser);
         setUser(authUser as FirebaseUser);
+        const result = await getUserVotes(authUser.uid);
+        setUserVotes(result);
       } else {
         setUser(null);
+        setAccount(null);
       }
     });
     // Clean up the observer when the component unmounts
