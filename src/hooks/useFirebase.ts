@@ -136,6 +136,24 @@ export default function useFirebase() {
     }
   };
 
+  const getUserVotes = async (userId: string): Promise<string[]> => {
+    init();
+
+    let userVotes: string[] = [];
+
+    const docRef = doc(db, "ideas", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const document = docSnap.data();
+      if ("ideas" in document) {
+        userVotes = document.ideas;
+      }
+    }
+
+    return Promise.resolve(userVotes);
+  };
+
   return {
     init,
     doLoginWithGoogle,
@@ -144,5 +162,6 @@ export default function useFirebase() {
     addToCollection,
     voteIdea,
     removeIdeaAction,
+    getUserVotes,
   };
 }
