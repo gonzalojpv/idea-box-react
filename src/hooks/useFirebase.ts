@@ -70,6 +70,8 @@ export default function useFirebase() {
   };
 
   const fetchCollection = async (path: string): Promise<Idea[]> => {
+    init();
+
     const collectionRef = collection(db, path);
     const orderedAndLimitedQuery = query(collectionRef, orderBy("votes", "desc"));
     const querySnapshot = await getDocs(orderedAndLimitedQuery);
@@ -101,6 +103,7 @@ export default function useFirebase() {
   };
 
   const voteIdea = async ({ id, type, userId }: { id: string; type: boolean; userId: string }) => {
+    init();
     const docRef = doc(db, "ideas", userId);
     const docSnap = await getDoc(docRef);
 
