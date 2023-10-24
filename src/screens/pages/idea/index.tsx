@@ -16,7 +16,9 @@ const IdeaPage = () => {
   const { doLoginWithGoogle, doLogout, fetchCollection, addToCollection, voteIdea, getUserVotes } =
     useFirebase();
 
-  const { setAccount, setUserVotes } = useContext(AccountContext) as AccountContextProps;
+  const { setAccount, setUserVotes, currentUser } = useContext(
+    AccountContext,
+  ) as AccountContextProps;
 
   const fetchIdeas = useCallback(async () => {
     try {
@@ -55,6 +57,10 @@ const IdeaPage = () => {
       }
 
       fetchIdeas();
+      if (currentUser) {
+        const result = await getUserVotes(currentUser.uid);
+        setUserVotes(result);
+      }
     } catch (error) {
       // @ts-ignore
       if (error?.message) {

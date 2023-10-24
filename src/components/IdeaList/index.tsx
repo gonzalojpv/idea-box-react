@@ -4,7 +4,7 @@ import useFirebase from "../../hooks/useFirebase";
 
 import { AccountContext, AccountContextProps } from "../../contexts/account-context";
 import type { Idea, IdeaListProps } from "../../types/ideas";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 const IdeaList = ({ items, upIdea, downIdea }: IdeaListProps) => {
   const [isModalActive, setIsModalActive] = useState<boolean>(false);
