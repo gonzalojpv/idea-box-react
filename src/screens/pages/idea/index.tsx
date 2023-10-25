@@ -86,7 +86,7 @@ const IdeaPage = () => {
           doLogin={doLoginWithGoogle}
           doLogout={doLogout}
         />
-        <IdeaList downIdea={handleIdea} upIdea={handleIdea} items={items} />
+        <IdeaList downIdea={handleIdea} upIdea={handleIdea} items={items} fetchIdeas={fetchIdeas} />
       </div>
       <ToastContainer />
     </>
