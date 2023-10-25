@@ -12,4 +12,5 @@ export interface IdeaListProps {
   items: Idea[];
   upIdea: (idea: Idea, type: boolean) => void;
   downIdea: (idea: Idea, type: boolean) => void;
+  fetchIdeas: () => void;
 }
