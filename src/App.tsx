@@ -1,20 +1,18 @@
 import "./App.css";
 
-import DefaultLayout from "./screens/layouts/default";
-import IdeaPage from "./screens/pages/idea";
-import LoginAuthPage from "./screens/pages/auth/login";
-import { AuthContextProvider } from "./contexts/auth-context";
+import router from "./router";
 
+import { AuthContextProvider } from "./contexts/auth-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const isReady = true;
   return (
     <AuthContextProvider>
       <QueryClientProvider client={queryClient}>
-        <DefaultLayout>{isReady ? <IdeaPage /> : <LoginAuthPage />}</DefaultLayout>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </AuthContextProvider>
   );
