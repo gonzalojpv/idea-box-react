@@ -1,14 +1,12 @@
-import { ReactNode } from "react";
+import { Outlet } from "react-router-dom";
 import { AccountContextProvider } from "../../contexts/account-context";
 
-interface ChildProps {
-  children: ReactNode;
-}
-
-const defaultLayout = ({ children }: ChildProps) => {
+const defaultLayout = () => {
   return (
     <AccountContextProvider>
-      <div className="container p-4 mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
+      <main className="container p-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <Outlet />
+      </main>
     </AccountContextProvider>
   );
 };
