@@ -5,7 +5,7 @@ interface ImageSearchListProps {
 }
 
 const ImageSearchList = ({ images }: ImageSearchListProps) => {
-  const open = url => window.open(url);
+  const open = (url: string) => window.open(url);
 
   return (
     <div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-0 lg:gap-x-8">
@@ -16,7 +16,7 @@ const ImageSearchList = ({ images }: ImageSearchListProps) => {
             className="h-96 w-full overflow-hidden rounded-lg sm:aspect-h-3 sm:aspect-w-2 group-hover:opacity-75 sm:h-auto"
           >
             <img
-              src={photo.urls?.regular}
+              src={photo.urls.regular}
               alt={photo.alt_description}
               className="h-full w-full object-cover object-center"
             />

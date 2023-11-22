@@ -12,10 +12,9 @@ const ImageSearch = () => {
   if (isLoading) {
     return <>Loading...</>;
   } else if (isError) {
+    // @ts-ignore
     return <div>{error.message}</div>;
   }
-
-  console.log("Data", data);
 
   return (
     <div className="bg-white">
