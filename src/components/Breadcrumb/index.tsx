@@ -1,10 +1,7 @@
 import { HomeIcon } from "@heroicons/react/20/solid";
 import { NavLink } from "react-router-dom";
 
-const pages = [
-  { name: "Image Search Engine", href: "/image-search-engine", current: false },
-  { name: "Project Nero", href: "#", current: true },
-];
+const pages = [{ name: "Image Search Engine", href: "/image-search-engine", current: false }];
 
 const Breadcrumb = () => {
   return (
