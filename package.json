@@ -22,7 +22,6 @@
     "react-hook-form": "^7.46.1",
     "react-router-dom": "^6.19.0",
     "react-toastify": "^9.1.3",
-    "solid": "link:@heroicons/react/20/solid",
     "sweetalert2": "^11.7.32",
     "uuid": "^9.0.1"
   },
