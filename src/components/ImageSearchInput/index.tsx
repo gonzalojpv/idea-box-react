@@ -1,4 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 interface IFormInput {
   query: string;
@@ -36,8 +37,8 @@ const ImageSearchInput = ({ onSearch }: ImageSearchInputProps) => {
           aria-invalid={errors.query ? "true" : "false"}
         />
         <div className="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
-          <kbd className="inline-flex items-center rounded border border-gray-200 px-1 font-sans text-xs text-gray-400">
-            ⌘K
+          <kbd className="inline-flex items-center px-1 font-sans text-xs text-gray-400">
+            <MagnifyingGlassIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
           </kbd>
         </div>
       </div>
