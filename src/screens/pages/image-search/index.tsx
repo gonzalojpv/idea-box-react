@@ -1,5 +1,6 @@
 import ImageSearchList from "../../../components/ImageSearchList";
 import ImageSearchInput from "../../../components/ImageSearchInput";
+import Loader from "../../../components/Loader";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchImages } from "../../../services/images";
@@ -18,7 +19,7 @@ const ImageSearch = () => {
   };
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <Loader />;
   } else if (isError) {
     // @ts-ignore
     return <div>{error.message}</div>;
