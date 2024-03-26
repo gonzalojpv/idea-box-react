@@ -26,7 +26,6 @@ export default function CourseGoalForm({ onAddGoal }: NewGoalProps) {
         </label>
         <input
           className="w-full px-2 py-1 bg-gray-300 border border-gray-400 rounded text-gray-900"
-          style={{ font: "inherit" }}
           id="goal"
           type="text"
           ref={goal}
@@ -38,17 +37,13 @@ export default function CourseGoalForm({ onAddGoal }: NewGoalProps) {
         </label>
         <input
           className="w-full px-2 py-1 bg-gray-300 border border-gray-400 rounded text-gray-900"
-          style={{ font: "inherit" }}
           id="summary"
           type="text"
           ref={summary}
         />
       </p>
       <p className="block my-4">
-        <button
-          className="block w-full px-3 py-2 mt-4 bg-yellow-300 border border-none rounded font-bold text-gray-900 cursor-pointer hover:bg-yellow-400"
-          style={{ font: "inherit" }}
-        >
+        <button className="block w-full px-3 py-2 mt-4 bg-yellow-300 border border-none rounded font-bold text-gray-900 cursor-pointer hover:bg-yellow-400">
           Add Goal
         </button>
       </p>
