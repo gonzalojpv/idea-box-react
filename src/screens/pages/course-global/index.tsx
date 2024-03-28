@@ -1,3 +1,5 @@
+import BaseButton from "@/components/BaseButton";
+import BaseInput from "@/components/BaseInput";
 import CourseGoalForm from "@/components/CourseGoalForm";
 import CourseGoalList from "@/components/CourseGoalList";
 
