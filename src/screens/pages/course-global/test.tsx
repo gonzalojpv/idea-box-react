@@ -3,12 +3,16 @@ import BaseContainer from "@/components/BaseContainer";
 import BaseCard from "@/components/BaseCard";
 import BaseIconButton from "@/components/BaseIconButton";
 import BaseList from "@/components/BaseList";
+import BaseInputRef from "@/components/BaseInputRef";
+
+import { useRef } from "react";
 
 function HeartIcon() {
   return <span>❤️</span>;
 }
 
 const TestCourse = () => {
+  const input = useRef<HTMLInputElement>(null);
   const users = [
     { id: "u1", name: "Max" },
     { id: "u2", name: "Manuel" },
@@ -38,6 +42,8 @@ const TestCourse = () => {
         <h2>Hobbies</h2>
         <BaseList items={hobbies} renderItem={hobby => <li key={hobby}>{hobby}</li>} />
       </section>
+
+      <BaseInputRef label="Test" id="test" ref={input} />
     </main>
   );
 };
