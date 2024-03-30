@@ -11,7 +11,7 @@ const BaseInput = ({ label, id, ...props }: BaseInputProps) => {
       <label className="block" htmlFor={id}>
         {label}
       </label>
-      <input id={id} {...props} />
+      <input id={id} name={id} {...props} />
     </p>
   );
 };

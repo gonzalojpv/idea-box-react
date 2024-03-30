@@ -4,6 +4,8 @@ import BaseCard from "@/components/BaseCard";
 import BaseIconButton from "@/components/BaseIconButton";
 import BaseList from "@/components/BaseList";
 import BaseInputRef from "@/components/BaseInputRef";
+import BaseInput from "@/components/BaseInput";
+import BaseForm, { type FormHandle } from "@/components/BaseForm";
 
 import { useRef } from "react";
 
@@ -13,12 +15,21 @@ function HeartIcon() {
 
 const TestCourse = () => {
   const input = useRef<HTMLInputElement>(null);
+  const customForm = useRef<FormHandle>(null);
+
   const users = [
     { id: "u1", name: "Max" },
     { id: "u2", name: "Manuel" },
   ];
 
   const hobbies = ["Sports", "Reading", "Cooking"];
+
+  const handleSave = (data: unknown) => {
+    const extractedData = data as { name: string; age: string };
+    console.log("Data", extractedData);
+    customForm.current?.clear();
+  };
+
   return (
     <main className="p-2 bg-gray-500">
       <BaseContainer as={BaseButton} type="button">
@@ -43,7 +54,14 @@ const TestCourse = () => {
         <BaseList items={hobbies} renderItem={hobby => <li key={hobby}>{hobby}</li>} />
       </section>
 
-      <BaseInputRef label="Test" id="test" ref={input} />
+      <BaseInputRef label="Test" id="test" name="test" ref={input} />
+      <BaseInput label="Test2" id="test2" name="test" />
+
+      <BaseForm onSave={handleSave} ref={customForm}>
+        <BaseInputRef type="text" label="Name" id="name" name="name" />
+        <BaseInputRef type="number" label="Age" id="age" name="age" />
+        <BaseButton>Save</BaseButton>
+      </BaseForm>
     </main>
   );
 };

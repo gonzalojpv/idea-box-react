@@ -12,7 +12,7 @@ const BaseInputRef = forwardRef<HTMLInputElement, BaseInputProps>(
         <label className="block" htmlFor={id}>
           {label}
         </label>
-        <input id={id} {...props} ref={ref} />
+        <input className="text-gray-900" id={id} {...props} ref={ref} />
       </p>
     );
   },
