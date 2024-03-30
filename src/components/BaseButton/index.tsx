@@ -14,7 +14,12 @@ const BaseButton = (props: AnchorProps | ButtonProps) => {
     return <a className="underline inline-block" {...props}></a>;
   }
 
-  return <button className="bg-gray-500 p-2 inline-block" {...props}></button>;
+  return (
+    <button
+      className="px-2 py-1 rounded-md border border-teal-500 bg-teal-500 text-white cursor-pointer transition duration-300 ease-in-out hover:bg-teal-600 hover:border-teal-600 focus:outline-none focus:ring focus:ring-teal-300 focus:ring-opacity-50"
+      {...props}
+    ></button>
+  );
 };
 
 export default BaseButton;

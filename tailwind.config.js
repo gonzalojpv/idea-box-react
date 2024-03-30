@@ -2,6 +2,9 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    fontFamily: {
+      handjet: ["Handjet", "sans-serif"],
+    },
     extend: {
       gridTemplateColumns: {
         "auto-fill-test": "repeat(auto-fit, minmax(15rem, 1fr));",
